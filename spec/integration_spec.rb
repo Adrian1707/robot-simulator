@@ -22,13 +22,22 @@ RSpec.describe 'Toy Robot Simulator End-to-End Integration' do
       expect(run_commands(commands)).to eq('0,1,NORTH')
     end
 
-    it 'handles turning and reports correctly (Example B)' do
+    it 'handles turning left and reports correctly (Example B)' do
       commands = <<~COMMANDS
         PLACE 0,0,NORTH
         LEFT
         REPORT
       COMMANDS
       expect(run_commands(commands)).to eq('0,0,WEST')
+    end
+
+    it 'handles turning right and reports correctly' do
+      commands = <<~COMMANDS
+        PLACE 0,0,NORTH
+        RIGHT
+        REPORT
+      COMMANDS
+      expect(run_commands(commands)).to eq('0,0,EAST')
     end
 
     it 'handles a sequence of movements and turns (Example C)' do

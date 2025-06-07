@@ -13,8 +13,15 @@ class Direction
   end
 
   def turn_left
-    idx = DIRECTION_NAMES.index(@name)
-    Direction.new(DIRECTION_NAMES[(idx - 1) % DIRECTION_NAMES.length])
+    current_index = DIRECTION_NAMES.index(@name)
+    new_direction = DIRECTION_NAMES[(current_index - 1) % DIRECTION_NAMES.length]
+    Direction.new(new_direction)
+  end
+
+  def turn_right
+    current_index = DIRECTION_NAMES.index(@name)
+    new_direction = DIRECTION_NAMES[(current_index + 1) % DIRECTION_NAMES.length]
+    Direction.new(new_direction)
   end
 
   def to_s
@@ -72,6 +79,10 @@ class Robot
     @direction = @direction.turn_left
   end
 
+  def turn_right
+    @direction = @direction.turn_right
+  end
+
   def report
     "#{@x},#{@y},#{@direction}"
   end
@@ -101,6 +112,8 @@ class ToyRobotSimulator
       @robot.move if @robot.placed?
     when 'LEFT'
       @robot.turn_left if @robot.placed?
+    when 'RIGHT'
+      @robot.turn_right if @robot.placed?
     when 'REPORT'
       @output.puts @robot.report if @robot.placed?
     else
