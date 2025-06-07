@@ -4,7 +4,7 @@ module Commands
   class Right < Base
     def execute
       return unless robot_placed?
-      robot.turn_right
+      robot.turn(:right)
     end
   end
 end

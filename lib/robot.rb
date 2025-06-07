@@ -17,12 +17,8 @@ class Robot
     @position = new_position
   end
 
-  def turn_left
-    @direction = @direction.turn_left
-  end
-
-  def turn_right
-    @direction = @direction.turn_right
+  def turn(direction)
+    @direction = @direction.turn(direction)
   end
 
   def report
