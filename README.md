@@ -5,16 +5,16 @@ This is a Ruby command-line application that simulates a toy robot moving on a 5
 ## Table of Contents
 
 - [Features](#features)
-- [Design Decisions / Architecture](#design-decisions--architecture)
-  - [Core Components](#core-components)
-  - [Command Pattern](#command-pattern)
-  - [Input Processing](#input-processing)
-  - [Error Handling](#error-handling)
 - [Usage](#usage)
   - [Installation](#installation)
   - [Running the Simulator](#running-the-simulator)
   - [Commands](#commands)
   - [Input Scenarios](#input-scenarios)
+- [Design Decisions / Architecture](#design-decisions--architecture)
+  - [Core Components](#core-components)
+  - [Command Pattern](#command-pattern)
+  - [Input Processing](#input-processing)
+  - [Error Handling](#error-handling)
 - [Test Data](#test-data)
 - [What Could Be Improved](#what-could-be-improved)
 
@@ -25,69 +25,6 @@ This is a Ruby command-line application that simulates a toy robot moving on a 5
 - Supports `PLACE`, `MOVE`, `LEFT`, `RIGHT`, and `REPORT` commands.
 - Ignores commands until a valid `PLACE` command is issued.
 - Can process commands from standard input or a file.
-
-## Design Decisions / Architecture
-
-The application is structured using an object-oriented approach using the Command and Strategy patterns
-
-![Architectural Diagram](diagram.svg)
-
-### Core Components
-
-- Table:
-    - Represents the 5x5 tabletop.
-    - Its primary responsibility is to validate if a given `position` is within its boundaries (`valid_position?`).
-    - Defaults to a 5x5 size, but could be extended to support custom dimensions.
-
-- Robot:
-    - Represents the toy robot itself.
-    - Holds its current `position` and `direction`.
-    - Manages its `placed?` state, ensuring commands are ignored before placement.
-    - Provides methods for `place`, `move`, `turn`, `report` and `next_position`
-    - Crucially, the `Robot` does not know about the `Table`'s boundaries; it only calculates its `next_position`. The `Table` is responsible for validating this position.
-
-- Direction
-    - Encapsulates the concept of direction (NORTH, EAST, SOUTH, WEST).
-    - Handles rotation logic (using the `turn` method).
-    - Provides coordinate deltas (`coordinate_delta`) for position calculations.
-    - Uses a `DIRECTION_NAMES` array and `COORDINATE_DELTAS` hash for efficient lookup and rotation.
-
-- Position:
-    - A simple value object representing X,Y coordinates.
-    - overrides == for easy comparison of positions.
-
--  ToyRobotSimulator:
-    -   The main orchestrator of the application.
-    -   Initialises the `Table` and `Robot`.
-    -   The `execute_command` method takes a raw input string, delegates parsing to `InputParser`, and then executes the resulting command.
-    -   The `run` method iterates over lines from an input source (defaulting to `$stdin`), allowing for both interactive and file-based input.
-
-### Command Pattern
-
-The application heavily utilises the [Command Pattern](https://refactoring.guru/design-patterns/command) to handle different robot actions:
-
--   Commands::Base:
-    -   An abstract base class for all commands.
-    -   Holds references to the `robot`, `table`, and `output` stream.
-    -   Defines the `execute` interface that all concrete commands must implement.
-    -   Includes a `robot_placed?` helper to ensure commands are only executed if the robot is on the table.
-
--   Concrete Command Classes:
-    -   Each class encapsulates a specific action.
-    -   The `execute` method for each command contains the logic for that particular action.
-    -   This design separates the action from the object that invokes the action (the simulator), making it easy to add new commands or modify existing ones without altering the core simulation logic.
-    -   `Commands::Invalid` is a special command that does nothing, effectively ignoring unrecognised or invalid commands as per the requirements. This opens us up for better error handling / logging in the future
-
-### Input Processing using a Strategy Pattern
-
-The command parsing system uses a [Strategy Pattern with Chain of Responsibility](https://refactoring.guru/design-patterns/strategy) to handle different types of user input. The `InputParser` tries each parser strategy in sequence until one can handle the input, falling back to an Invalid command if none match.
-
-**Two-Parser Split Rationale**: The PLACE command is fundamentally different from other commands. It requires complex parameter parsing (coordinates and direction) with regex validation, while MOVE/LEFT/RIGHT/REPORT are simple, parameterless commands requiring only exact string matching. This separation keeps the simple command parser lightweight and gives PLACE the sophisticated parsing logic it needs, following the single responsibility principle and making the code more maintainable.
-
-### Error Handling
-
--   **Invalid Commands**: Commands issued before a successful `PLACE` command, or syntactically incorrect commands, are parsed into `Commands::Invalid` objects and are effectively ignored, fulfilling the requirement to discard invalid commands.
--   **Falling Off**: The `Table#valid_position?` method is crucial. Before a `MOVE` command is executed, the `Robot` calculates its `next_position`. This position is then validated by the `Table`. If the `next_position` is off the table, the `MOVE` command's `execute` method simply does nothing, preventing the robot from falling.
 
 ## Usage
 
@@ -369,6 +306,69 @@ REPORT
 1,1,EAST
 3,4,EAST
 ```
+
+## Design Decisions / Architecture
+
+The application is structured using an object-oriented approach using the Command and Strategy patterns
+
+![Architectural Diagram](diagram.svg)
+
+### Core Components
+
+- Table:
+    - Represents the 5x5 tabletop.
+    - Its primary responsibility is to validate if a given `position` is within its boundaries (`valid_position?`).
+    - Defaults to a 5x5 size, but could be extended to support custom dimensions.
+
+- Robot:
+    - Represents the toy robot itself.
+    - Holds its current `position` and `direction`.
+    - Manages its `placed?` state, ensuring commands are ignored before placement.
+    - Provides methods for `place`, `move`, `turn`, `report` and `next_position`
+    - Crucially, the `Robot` does not know about the `Table`'s boundaries; it only calculates its `next_position`. The `Table` is responsible for validating this position.
+
+- Direction
+    - Encapsulates the concept of direction (NORTH, EAST, SOUTH, WEST).
+    - Handles rotation logic (using the `turn` method).
+    - Provides coordinate deltas (`coordinate_delta`) for position calculations.
+    - Uses a `DIRECTION_NAMES` array and `COORDINATE_DELTAS` hash for efficient lookup and rotation.
+
+- Position:
+    - A simple value object representing X,Y coordinates.
+    - overrides == for easy comparison of positions.
+
+-  ToyRobotSimulator:
+    -   The main orchestrator of the application.
+    -   Initialises the `Table` and `Robot`.
+    -   The `execute_command` method takes a raw input string, delegates parsing to `InputParser`, and then executes the resulting command.
+    -   The `run` method iterates over lines from an input source (defaulting to `$stdin`), allowing for both interactive and file-based input.
+
+### Command Pattern
+
+The application heavily utilises the [Command Pattern](https://refactoring.guru/design-patterns/command) to handle different robot actions:
+
+-   Commands::Base:
+    -   An abstract base class for all commands.
+    -   Holds references to the `robot`, `table`, and `output` stream.
+    -   Defines the `execute` interface that all concrete commands must implement.
+    -   Includes a `robot_placed?` helper to ensure commands are only executed if the robot is on the table.
+
+-   Concrete Command Classes:
+    -   Each class encapsulates a specific action.
+    -   The `execute` method for each command contains the logic for that particular action.
+    -   This design separates the action from the object that invokes the action (the simulator), making it easy to add new commands or modify existing ones without altering the core simulation logic.
+    -   `Commands::Invalid` is a special command that does nothing, effectively ignoring unrecognised or invalid commands as per the requirements. This opens us up for better error handling / logging in the future
+
+### Input Processing using a Strategy Pattern
+
+The command parsing system uses a [Strategy Pattern with Chain of Responsibility](https://refactoring.guru/design-patterns/strategy) to handle different types of user input. The `InputParser` tries each parser strategy in sequence until one can handle the input, falling back to an Invalid command if none match.
+
+**Two-Parser Split Rationale**: The PLACE command is fundamentally different from other commands. It requires complex parameter parsing (coordinates and direction) with regex validation, while MOVE/LEFT/RIGHT/REPORT are simple, parameterless commands requiring only exact string matching. This separation keeps the simple command parser lightweight and gives PLACE the sophisticated parsing logic it needs, following the single responsibility principle and making the code more maintainable.
+
+### Error Handling
+
+-   **Invalid Commands**: Commands issued before a successful `PLACE` command, or syntactically incorrect commands, are parsed into `Commands::Invalid` objects and are effectively ignored, fulfilling the requirement to discard invalid commands.
+-   **Falling Off**: The `Table#valid_position?` method is crucial. Before a `MOVE` command is executed, the `Robot` calculates its `next_position`. This position is then validated by the `Table`. If the `next_position` is off the table, the `MOVE` command's `execute` method simply does nothing, preventing the robot from falling.
 
 ## What Could Be Improved
 
