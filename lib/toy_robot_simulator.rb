@@ -2,7 +2,6 @@ class ToyRobotSimulator
   def initialize(output = $stdout)
     @output = output
     @placed = false
-    @moved_once = false
   end
 
   def run(input)
@@ -20,12 +19,10 @@ class ToyRobotSimulator
       @y = y.to_i
       @direction = dir
       @placed = true
-      @moved_once = false
     elsif !@placed
       return
-    elsif command == 'MOVE' && !@moved_once
+    elsif command == 'MOVE'
       move
-      @moved_once = true
     elsif command == 'LEFT'
       turn_left
     elsif command == 'REPORT'
@@ -36,10 +33,15 @@ class ToyRobotSimulator
   def move
     case @direction
     when 'NORTH' then @y += 1
+    when 'SOUTH' then @y -= 1
+    when 'EAST'  then @x += 1
+    when 'WEST'  then @x -= 1
     end
   end
 
   def turn_left
-    @direction = 'WEST' if @direction == 'NORTH'
+    directions = ['NORTH', 'WEST', 'SOUTH', 'EAST']
+    idx = directions.index(@direction)
+    @direction = directions[(idx + 1) % 4]
   end
 end
