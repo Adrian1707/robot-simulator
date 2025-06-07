@@ -8,6 +8,8 @@ class Direction
 
   DIRECTION_NAMES = COORDINATE_DELTAS.keys.freeze
 
+  attr_reader :name
+
   def initialize(name)
     @name = name
   end
@@ -26,6 +28,4 @@ class Direction
   def to_s
     @name
   end
-
-  attr_reader :name
 end

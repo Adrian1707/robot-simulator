@@ -9,10 +9,6 @@ class ToyRobotSimulator
     @output = output
   end
 
-  def execute_command(input)
-    command_from_input(input).execute
-  end
-
   def run(input_source = $stdin)
     input_source.each_line do |line|
       next if line.strip.empty?
@@ -21,6 +17,10 @@ class ToyRobotSimulator
   end
 
   private
+
+  def execute_command(input)
+    command_from_input(input).execute
+  end
 
   def command_from_input(input)
     InputParser.parse(input, robot, table, output)

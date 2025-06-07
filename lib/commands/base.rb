@@ -12,6 +12,8 @@ module Commands
       raise NotImplementedError, "#{self.class} has not implemented method '#{__method__}'"
     end
 
+    private
+
     def robot_placed?
       robot.placed?
     end

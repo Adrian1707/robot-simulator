@@ -1,5 +1,4 @@
 class Robot
-  attr_reader :position, :direction
 
   def initialize
     @position = nil
@@ -39,4 +38,8 @@ class Robot
     delta_x, delta_y = direction.coordinate_delta
     Position.new(position.x + delta_x, position.y + delta_y)
   end
+
+  private
+
+  attr_reader :position, :direction
 end

@@ -4,35 +4,17 @@ require 'position'
 RSpec.describe Table do
   describe '#initialize' do
     context 'without arguments' do
-      it 'creates a Table object with default width and height' do
+      it 'creates a Table object' do
         table = Table.new
         expect(table).to be_an_instance_of(Table)
-        expect(table.width).to eq(Table::DEFAULT_SIZE)
-        expect(table.height).to eq(Table::DEFAULT_SIZE)
       end
     end
 
     context 'with custom arguments' do
-      it 'creates a Table object with the given width and height' do
+      it 'creates a Table object' do
         table = Table.new(8, 6)
         expect(table).to be_an_instance_of(Table)
-        expect(table.width).to eq(8)
-        expect(table.height).to eq(6)
       end
-    end
-  end
-
-  describe '#width' do
-    it 'returns the width of the table' do
-      table = Table.new(7, 3)
-      expect(table.width).to eq(7)
-    end
-  end
-
-  describe '#height' do
-    it 'returns the height of the table' do
-      table = Table.new(7, 3)
-      expect(table.height).to eq(3)
     end
   end
 

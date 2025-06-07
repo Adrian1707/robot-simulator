@@ -33,9 +33,8 @@ RSpec.describe Robot do
   describe '#initialize' do
     it 'creates an unplaced robot' do
       robot = Robot.new
-      expect(robot.position).to be_nil
-      expect(robot.direction).to be_nil
       expect(robot.placed?).to be false
+      expect(robot.report).to eq(nil)
     end
   end
 
@@ -44,8 +43,7 @@ RSpec.describe Robot do
 
     it 'places the robot at the given position and direction' do
       robot.place(initial_position, north_direction)
-      expect(robot.position).to eq(initial_position)
-      expect(robot.direction).to eq(north_direction)
+      expect(robot.report).to eq("#{initial_position},#{north_direction}")
       expect(robot.placed?).to be true
     end
 
@@ -53,8 +51,7 @@ RSpec.describe Robot do
       robot.place(initial_position, north_direction)
       new_position = Position.new(2, 2)
       robot.place(new_position, east_direction)
-      expect(robot.position).to eq(new_position)
-      expect(robot.direction).to eq(east_direction)
+      expect(robot.report).to eq("#{new_position},#{east_direction}")
       expect(robot.placed?).to be true
     end
   end
@@ -70,19 +67,19 @@ RSpec.describe Robot do
 
       it 'updates the robots position to the new_position' do
         robot.move(new_position)
-        expect(robot.position).to eq(new_position)
+        expect(robot.report).to eq("#{new_position},#{north_direction}")
       end
 
       it 'does not change direction' do
         robot.move(new_position)
-        expect(robot.direction).to eq(north_direction)
+        expect(robot.report).to eq("#{new_position},#{north_direction}")
       end
     end
 
     context 'when robot is not placed' do
       it 'does not change position' do
         robot.move(new_position)
-        expect(robot.position).to eq robot.position
+        expect(robot.report).to eq(nil)
       end
     end
   end
@@ -99,20 +96,20 @@ RSpec.describe Robot do
       it 'updates the robots direction by turning left' do
         robot.place(initial_position, north_direction)
         robot.turn(:left)
-        expect(robot.direction).to eq(west_direction)
+        expect(robot.report).to eq("#{initial_position},#{west_direction}")
       end
 
       it 'updates the robots direction by turning right' do
         robot.place(initial_position, north_direction)
         robot.turn(:right)
-        expect(robot.direction).to eq(east_direction)
+        expect(robot.report).to eq("#{initial_position},#{east_direction}")
       end
     end
 
     context 'when robot is not placed' do
       it 'returns nil' do
         robot.turn(:left)
-        expect(robot.direction).to be_nil
+        expect(robot.report).to eq(nil)
       end
     end
   end
