@@ -158,8 +158,7 @@ ruby run.rb < commands.txt
 0,1,NORTH
 0,0,WEST
 3,3,NORTH
-Invalid command, please try again
-nil # Report after an invalid place command, robot not placed.
+3,3,NORTH
 ```
 
 ### Commands
@@ -185,8 +184,11 @@ All commands are case-sensitive for directions (e.g., `NORtH`, `north`, `North` 
     -   Rotates the robot 90 degrees to the right (clockwise) without changing its position.
 
 -   **`REPORT`**:
-    -   Announces the robot's current `X,Y` position and its facing direction `F` to standard output.
-    -   Example output: `0,1,NORTH`
+    - When the robot is placed
+        -  Announces the robot's current `X,Y` position and its facing direction `F` to standard output.
+        -  Example output: `0,1,NORTH`
+    - When the robot is not placed
+        - Nothing is output to the user
 
 ### Input Scenarios
 
@@ -228,8 +230,12 @@ All commands are case-sensitive for directions (e.g., `NORtH`, `north`, `North` 
 
 ## Test Data
 
-The problem description provides the following example test cases:
+The problem description provides the following example test cases.
+These test cases are included in commands.txt and their actual output can be verified by running
 
+```bash
+ruby run.rb < commands.txt
+```
 **Test Case 1:**
 
 ```
@@ -321,10 +327,10 @@ REPORT
 ```
 **Expected Output:**
 ```
-nil
-nil
-nil
-nil
+
+
+
+
 2,2,NORTH
 ```
 *(First four `PLACE` commands are invalid and ignored, robot is only placed by the last one)*
@@ -339,7 +345,7 @@ REPORT
 ```
 **Expected Output:**
 ```
-Invalid command, please try again
+
 1,1,NORTH
 ```
 *(`PLACE 0,0,UP` fails due to invalid direction, robot remains unplaced until `PLACE 1,1,NORTH`)*
@@ -445,7 +451,7 @@ I would change LEFT and RIGHT to "TURN_LEFT" "TURN_RIGHT". It's not so clear tha
 #### "Look" command
 I would have liked to add a feature to allow users to inspect the board and where the robot was
 #### Undo / repeat functionality
-Allow the user to easily undo or repeat a command without having to type it in again or perform the reverse. If a user has PLACE 2,2,NORTH and then does MOVE and realises "Oh crap i wanted to go the other way, they can't easily undo that"
+Allow the user to easily undo or repeat a command without having to type it in again or perform the reverse. If a user has PLACE 2,2,NORTH and then does MOVE and realises "Oh but i wanted to go the other way" they can't easily undo that
 #### Permit case insensitivity
 The requirements didn't say anything about allowing case insensitivity so i was strict in not permitting, say "place 0,0,north". 
 
