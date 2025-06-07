@@ -1,27 +1,31 @@
 class Direction
-  DIRECTIONS = ['NORTH', 'EAST', 'SOUTH', 'WEST']
+  COORDINATE_DELTAS = {
+    'NORTH' => [0, 1],
+    'EAST'  => [1, 0],
+    'SOUTH' => [0, -1],
+    'WEST'  => [-1, 0]
+  }.freeze
+
+  DIRECTION_NAMES = COORDINATE_DELTAS.keys.freeze
 
   def initialize(name)
     @name = name
   end
 
   def turn_left
-    idx = DIRECTIONS.index(@name)
-    Direction.new(DIRECTIONS[(idx - 1) % 4])
+    idx = DIRECTION_NAMES.index(@name)
+    Direction.new(DIRECTION_NAMES[(idx - 1) % DIRECTION_NAMES.length])
   end
 
   def to_s
     @name
   end
 
-  def movement_delta
-    {
-      'NORTH' => [0, 1],
-      'EAST'  => [1, 0],
-      'SOUTH' => [0, -1],
-      'WEST'  => [-1, 0]
-    }[@name]
+  def coordinate_delta
+    COORDINATE_DELTAS[name]
   end
+
+  attr_reader :name
 end
 
 class Table
@@ -55,7 +59,7 @@ class Robot
   end
 
   def move
-    dx, dy = @direction.movement_delta
+    dx, dy = @direction.coordinate_delta
     new_x = @x + dx
     new_y = @y + dy
     return unless @table.valid_position?(new_x, new_y)
