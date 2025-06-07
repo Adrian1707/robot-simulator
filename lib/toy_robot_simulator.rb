@@ -35,18 +35,34 @@ class Direction
   attr_reader :name
 end
 
+class Position
+  attr_reader :x, :y
+
+  def initialize(x, y)
+    @x = x
+    @y = y
+  end
+
+  def ==(other)
+    other.is_a?(Position) && x == other.x && y == other.y
+  end
+
+  def to_s
+    "#{x},#{y}"
+  end
+end
+
 class Table
   WIDTH = 5
   HEIGHT = 5
 
-  def valid_position?(x, y)
-    x.between?(0, WIDTH - 1) && y.between?(0, HEIGHT - 1)
+  def valid_position?(position)
+    position.x.between?(0, WIDTH - 1) && position.y.between?(0, HEIGHT - 1)
   end
 end
 
-
 class Robot
-  attr_reader :x, :y, :direction
+  attr_reader :position, :direction
 
   def initialize
     @placed = false
@@ -54,9 +70,10 @@ class Robot
   end
 
   def place(x, y, direction)
-    return unless @table.valid_position?(x, y)
-    @x = x
-    @y = y
+    new_position = Position.new(x, y)
+    return unless @table.valid_position?(new_position)
+
+    @position = new_position
     @direction = Direction.new(direction)
     @placed = true
   end
@@ -67,12 +84,10 @@ class Robot
 
   def move
     dx, dy = @direction.coordinate_delta
-    new_x = @x + dx
-    new_y = @y + dy
-    return unless @table.valid_position?(new_x, new_y)
+    new_position = Position.new(@position.x + dx, @position.y + dy)
+    return unless @table.valid_position?(new_position)
 
-    @x = new_x
-    @y = new_y
+    @position = new_position
   end
 
   def turn_left
@@ -84,7 +99,7 @@ class Robot
   end
 
   def report
-    "#{@x},#{@y},#{@direction}"
+    "#{@position},#{@direction}"
   end
 end
 
