@@ -43,4 +43,18 @@ RSpec.describe 'Toy Robot Simulator End-to-End Integration' do
       expect(run_commands(commands)).to eq('3,3,NORTH')
     end
   end
+
+  context 'when robot is not yet placed' do
+    it 'ignores move, turn, and report commands' do
+      commands = <<~COMMANDS
+        MOVE
+        LEFT
+        RIGHT
+        REPORT
+        PLACE 1,1,SOUTH
+        REPORT
+      COMMANDS
+      expect(run_commands(commands)).to eq('1,1,SOUTH')
+    end
+  end
 end

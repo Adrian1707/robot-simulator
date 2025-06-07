@@ -27,10 +27,19 @@ end
 class Robot
   attr_reader :x, :y, :direction
 
+  def initialize
+    @placed = false
+  end
+
   def place(x, y, direction)
     @x = x
     @y = y
     @direction = Direction.new(direction)
+    @placed = true
+  end
+
+  def placed?
+    @placed
   end
 
   def move
@@ -66,6 +75,8 @@ class ToyRobotSimulator
     if command.start_with?('PLACE')
       x, y, dir = command.match(/PLACE (\d+),(\d+),(NORTH|SOUTH|EAST|WEST)/).captures
       @robot.place(x.to_i, y.to_i, dir)
+    elsif !@robot.placed?
+      return
     elsif command == 'MOVE'
       @robot.move
     elsif command == 'LEFT'
