@@ -11,12 +11,12 @@ This is a Ruby command-line application that simulates a toy robot moving on a 5
   - [Running the Simulator](#running-the-simulator)
   - [Commands](#commands)
   - [Input Scenarios](#input-scenarios)
+- [Test Data](#test-data)
 - [Design Decisions / Architecture](#design-decisions--architecture)
   - [Core Components](#core-components)
   - [Command Pattern](#command-pattern)
-  - [Input Processing](#input-processing)
+  - [Input Processing](#input-processing-using-a-strategy-pattern)
   - [Error Handling](#error-handling)
-- [Test Data](#test-data)
 - [What Could Be Improved](#what-could-be-improved)
 
 ## Features
