@@ -131,6 +131,22 @@ RSpec.describe ToyRobotSimulator do
       expect(run_commands(commands)).to eq('')
     end
 
+    it 'when commas are excluded' do
+      commands = <<~COMMANDS
+        PLACE 1 1 NORTH
+        REPORT
+      COMMANDS
+      expect(run_commands(commands)).to eq('')
+    end
+
+    it 'when there is a comma at the end' do
+      commands = <<~COMMANDS
+        PLACE 1,1,NORTH,
+        REPORT
+      COMMANDS
+      expect(run_commands(commands)).to eq('')
+    end
+
     it 'prevents extra whitespace around and within commands' do
       commands = <<~COMMANDS
           PLACE  1, 2,  EAST  
