@@ -7,6 +7,7 @@ This is a Ruby command-line application that simulates a toy robot moving on a 5
 - [Features](#features)
 - [Usage](#usage)
   - [Installation](#installation)
+  - [Running the Tests](#running-the-tests)
   - [Running the Simulator](#running-the-simulator)
   - [Commands](#commands)
   - [Input Scenarios](#input-scenarios)
@@ -31,6 +32,61 @@ This is a Ruby command-line application that simulates a toy robot moving on a 5
 ### Installation
 
 This application is written in Ruby 3.4.4. You will need a Ruby environment installed on your system (version 2.7 or higher is recommended). No special gems are required.
+
+#### 1. **Install Ruby**
+
+If you don't already have Ruby installed, I'd recommend using a version manager like rbenv or rvm.
+
+**macOS (with Homebrew)**
+
+```bash
+brew install rbenv
+rbenv install 3.2.2
+rbenv global 3.2.2
+```
+
+**Ubuntu/Debian (via `rbenv`)**
+
+```bash
+sudo apt update
+sudo apt install -y git curl libssl-dev libreadline-dev zlib1g-dev
+git clone https://github.com/rbenv/rbenv.git ~/.rbenv
+cd ~/.rbenv && src/configure && make -C src
+echo 'export PATH="$HOME/.rbenv/bin:$PATH"' >> ~/.bashrc
+echo 'eval "$(rbenv init - bash)"' >> ~/.bashrc
+exec "$SHELL"
+git clone https://github.com/rbenv/ruby-build.git ~/.rbenv/plugins/ruby-build
+rbenv install 3.2.2
+rbenv global 3.2.2
+```
+
+#### 2. **Install Bundler**
+Bundler manages Ruby gem dependencies.
+
+```bash
+gem install bundler
+```
+
+#### 3. Install Project Dependencies
+Inside the project directory:
+
+```bash
+bundle install
+```
+
+### Running the Tests
+
+To run the test suite, you’ll need to have Ruby and Bundler installed. These steps will walk you through getting set up and running tests using RSpec.
+
+#### 1. Run the Test Suite
+```bash
+rspec
+```
+
+#### 2. (Optional) Run a specific test file
+```bash
+rspec spec/integration_spec.rb
+```
 
 ### Running the Simulator
 
