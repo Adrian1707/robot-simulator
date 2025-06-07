@@ -1,6 +1,6 @@
 require_relative './table'
 require_relative './robot'
-require_relative './command_parser'
+require_relative './input_parser'
 
 class ToyRobotSimulator
   def initialize(table = Table.new, output = $stdout)
@@ -10,8 +10,7 @@ class ToyRobotSimulator
   end
 
   def execute_command(input)
-    command = CommandParser.parse(input, robot, table, output)
-    command.execute
+    command_from_input(input).execute
   end
 
   def run(input_source = $stdin)
@@ -22,6 +21,10 @@ class ToyRobotSimulator
   end
 
   private
+
+  def command_from_input(input)
+    InputParser.parse(input, robot, table, output)
+  end
 
   attr_reader :table, :robot, :output
 end
