@@ -163,4 +163,54 @@ RSpec.describe 'Toy Robot Simulator End-to-End Integration' do
       expect(run_commands(commands)).to eq('1,1,NORTH')
     end
   end
+
+  context 'robot state management' do
+    it 'can be re-placed on the table, resetting its position and direction' do
+      commands = <<~COMMANDS
+        PLACE 0,0,NORTH
+        MOVE
+        PLACE 3,3,SOUTH
+        MOVE
+        REPORT
+      COMMANDS
+      expect(run_commands(commands)).to eq('3,2,SOUTH')
+    end
+
+    it 'reports the correct state after each command in a sequence' do
+      commands = <<~COMMANDS
+        PLACE 1,1,EAST
+        REPORT
+        MOVE
+        REPORT
+        LEFT
+        REPORT
+      COMMANDS
+      expected_output = "1,1,EAST\n2,1,EAST\n2,1,NORTH"
+      expect(run_commands(commands)).to eq(expected_output)
+    end
+
+    it 'returns to the original direction after four left turns' do
+      commands = <<~COMMANDS
+        PLACE 0,0,NORTH
+        LEFT
+        LEFT
+        LEFT
+        LEFT
+        REPORT
+      COMMANDS
+      expect(run_commands(commands)).to eq('0,0,NORTH')
+    end
+
+    it 'returns to the original direction after four right turns' do
+      commands = <<~COMMANDS
+        PLACE 2,2,EAST
+        RIGHT
+        RIGHT
+        RIGHT
+        RIGHT
+        REPORT
+      COMMANDS
+      expect(run_commands(commands)).to eq('2,2,EAST')
+    end
+  end
 end
