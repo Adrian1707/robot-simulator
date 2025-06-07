@@ -65,28 +65,18 @@ class Robot
   attr_reader :position, :direction
 
   def initialize
+    @position = nil
+    @direction = nil
     @placed = false
-    @table = Table.new
   end
 
-  def place(x, y, direction)
-    new_position = Position.new(x, y)
-    return unless @table.valid_position?(new_position)
-
-    @position = new_position
-    @direction = Direction.new(direction)
+  def place(position, direction)
+    @position = position
+    @direction = direction
     @placed = true
   end
 
-  def placed?
-    @placed
-  end
-
-  def move
-    dx, dy = @direction.coordinate_delta
-    new_position = Position.new(@position.x + dx, @position.y + dy)
-    return unless @table.valid_position?(new_position)
-
+  def move(new_position)
     @position = new_position
   end
 
@@ -99,40 +89,153 @@ class Robot
   end
 
   def report
-    "#{@position},#{@direction}"
+    return nil unless placed?
+
+    "#{position},#{direction}"
+  end
+
+  def placed?
+    @placed
+  end
+
+  def next_position
+    return nil unless placed?
+
+    delta_x, delta_y = direction.coordinate_delta
+    Position.new(position.x + delta_x, position.y + delta_y)
   end
 end
 
 
-class ToyRobotSimulator
-  def initialize(output = $stdout)
-    @output = output
-    @robot = Robot.new
+module Commands
+  class Base
+    attr_reader :robot, :table, :output
+
+    def initialize(robot, table, output)
+      @robot = robot
+      @table = table
+      @output = output
+    end
+
+    def execute
+      raise NotImplementedError, "#{self.class} has not implemented method '#{__method__}'"
+    end
+
+    def robot_placed?
+      robot.placed?
+    end
   end
 
-  def run(input)
-    input.each_line do |line|
-      handle_command(line.strip)
+  class Invalid < Base
+    def execute
+      # Do nothing for now, requiremments state just to ignore
+    end
+  end
+
+  class Left < Base
+    def execute
+      return unless robot_placed?
+      robot.turn_left
+    end
+  end
+
+  class Move < Base
+    def execute
+      return unless robot_placed?
+
+      next_position = robot.next_position
+      if next_position && table.valid_position?(next_position)
+        robot.move(next_position)
+      end
+    end
+  end
+
+  class Place < Base
+    attr_reader :x, :y, :direction_name
+
+    def initialize(robot, table, output, x, y, direction_name)
+      super(robot, table, output)
+      @x = x
+      @y = y
+      @direction_name = direction_name
+    end
+
+    def execute
+      position = Position.new(x, y)
+      begin
+        direction = Direction.new(direction_name)
+        if table.valid_position?(position)
+          robot.place(position, direction)
+        end
+      end
+    end
+  end
+
+  class Report < Base
+    def execute
+      return unless robot_placed?
+      output.puts robot.report
+    end
+  end
+
+  class Right < Base
+    def execute
+      return unless robot_placed?
+      robot.turn_right
+    end
+  end
+end
+
+class CommandParser
+  PLACE_PATTERN = /\APLACE\s+(\d+),(\d+),\s*(NORTH|SOUTH|EAST|WEST)\s*\z/i
+  VALID_COMMANDS = {
+    'MOVE' => Commands::Move,
+    'LEFT' => Commands::Left,
+    'RIGHT' => Commands::Right,
+    'REPORT' => Commands::Report
+  }.freeze
+
+  def self.parse(input, robot, table, output)
+    command_str = input.strip
+
+    if command_str.start_with?('PLACE')
+      parse_place_command(command_str, robot, table, output)
+    elsif VALID_COMMANDS.key?(command_str)
+      VALID_COMMANDS[command_str].new(robot, table, output)
+    else
+      Commands::Invalid.new(robot, table, output)
+    end
+  end
+
+  private_class_method def self.parse_place_command(command_str, robot, table, output)
+    match = PLACE_PATTERN.match(command_str)
+    return Commands::Invalid.new(robot, table, output) unless match
+
+    x, y, direction = match.captures
+    Commands::Place.new(robot, table, output, x.to_i, y.to_i, direction)
+  end
+end
+
+class ToyRobotSimulator
+  def initialize(table = Table.new, output = $stdout)
+    @table = table
+    @robot = Robot.new
+    @output = output
+  end
+
+  def execute_command(input)
+    command = CommandParser.parse(input, robot, table, output)
+    command.execute
+  end
+
+  def run(input_source = $stdin)
+    input_source.each_line do |line|
+      next if line.strip.empty?
+      execute_command(line)
     end
   end
 
   private
 
-  def handle_command(command)
-    case command
-    when /\APLACE (\d+),(\d+),(NORTH|EAST|SOUTH|WEST)\z/
-      x, y, dir = $1.to_i, $2.to_i, $3
-      @robot.place(x, y, dir)
-    when 'MOVE'
-      @robot.move if @robot.placed?
-    when 'LEFT'
-      @robot.turn_left if @robot.placed?
-    when 'RIGHT'
-      @robot.turn_right if @robot.placed?
-    when 'REPORT'
-      @output.puts @robot.report if @robot.placed?
-    else
-      # Ignore unsupported commands, maybe we might want to log or alert for these later
-    end
-  end
-end
+  attr_reader :table, :robot, :output
+end 

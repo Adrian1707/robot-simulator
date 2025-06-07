@@ -4,7 +4,7 @@ require 'toy_robot_simulator'
 
 RSpec.describe 'Toy Robot Simulator End-to-End Integration' do
   let(:output_buffer) { StringIO.new }
-  let(:simulator) { ToyRobotSimulator.new(output_buffer) }
+  let(:simulator) { ToyRobotSimulator.new(Table.new, output_buffer) }
 
   def run_commands(commands_string)
     input_buffer = StringIO.new(commands_string)
