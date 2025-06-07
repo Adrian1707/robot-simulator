@@ -106,20 +106,20 @@ ruby run.rb
 PLACE 0,0,NORTH
 MOVE
 REPORT
-0,1,NORTH
+0,1,NORTH # <- Output
 LEFT
 REPORT
 0,1,WEST
 MOVE
 REPORT
-0,1,WEST  # Robot tried to move off the table (0,1 -> -1,1), so ignored.
+0,1,WEST  # <- Output. Robot tried to move off the table (0,1 -> -1,1), so ignored.
 PLACE 1,2,EAST
 MOVE
 MOVE
 LEFT
 MOVE
 REPORT
-3,3,NORTH
+3,3,NORTH # <- Output
 ```
 
 #### File Input
