@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 require 'toy_robot_simulator'
 
 RSpec.describe 'Toy Robot Simulator End-to-End Integration' do
@@ -13,7 +11,7 @@ RSpec.describe 'Toy Robot Simulator End-to-End Integration' do
   end
 
   context 'Basic movements and reporting' do
-    it 'handles a simple movement and reports correctly (Example A)' do
+    it 'handles a simple movement and reports correctly' do
       commands = <<~COMMANDS
         PLACE 0,0,NORTH
         MOVE
@@ -22,7 +20,7 @@ RSpec.describe 'Toy Robot Simulator End-to-End Integration' do
       expect(run_commands(commands)).to eq('0,1,NORTH')
     end
 
-    it 'handles turning left and reports correctly (Example B)' do
+    it 'handles turning left and reports correctly' do
       commands = <<~COMMANDS
         PLACE 0,0,NORTH
         LEFT
@@ -40,7 +38,7 @@ RSpec.describe 'Toy Robot Simulator End-to-End Integration' do
       expect(run_commands(commands)).to eq('0,0,EAST')
     end
 
-    it 'handles a sequence of movements and turns (Example C)' do
+    it 'handles a sequence of movements and turns' do
       commands = <<~COMMANDS
         PLACE 1,2,EAST
         MOVE
