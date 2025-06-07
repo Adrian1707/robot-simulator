@@ -85,7 +85,7 @@ rspec
 
 #### 2. (Optional) Run a specific test file
 ```bash
-rspec spec/integration_spec.rb
+rspec spec/robot_spec.rb
 ```
 
 ### Running the Simulator

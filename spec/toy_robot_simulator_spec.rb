@@ -1,6 +1,6 @@
 require 'toy_robot_simulator'
 
-RSpec.describe 'Toy Robot Simulator End-to-End Integration' do
+RSpec.describe ToyRobotSimulator do
   let(:output_buffer) { StringIO.new }
   let(:simulator) { ToyRobotSimulator.new(Table.new, output_buffer) }
 
