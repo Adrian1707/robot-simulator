@@ -18,6 +18,8 @@ class Robot
   end
 
   def turn(direction)
+    return nil unless placed?
+
     @direction = @direction.turn(direction)
   end
 
