@@ -89,17 +89,18 @@ class ToyRobotSimulator
   private
 
   def handle_command(command)
-    if command.start_with?('PLACE')
-      x, y, dir = command.match(/PLACE (\d+),(\d+),(NORTH|SOUTH|EAST|WEST)/).captures
-      @robot.place(x.to_i, y.to_i, dir)
-    elsif !@robot.placed?
-      return
-    elsif command == 'MOVE'
-      @robot.move
-    elsif command == 'LEFT'
-      @robot.turn_left
-    elsif command == 'REPORT'
-      @output.puts @robot.report
+    case command
+    when /\APLACE (\d+),(\d+),(NORTH|EAST|SOUTH|WEST)\z/
+      x, y, dir = $1.to_i, $2.to_i, $3
+      @robot.place(x, y, dir)
+    when 'MOVE'
+      @robot.move if @robot.placed?
+    when 'LEFT'
+      @robot.turn_left if @robot.placed?
+    when 'REPORT'
+      @output.puts @robot.report if @robot.placed?
+    else
+      # Ignore unsupported commands, maybe we might want to log or alert for these later
     end
   end
 end

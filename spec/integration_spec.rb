@@ -112,4 +112,46 @@ RSpec.describe 'Toy Robot Simulator End-to-End Integration' do
       expect(run_commands(commands)).to eq('0,0,NORTH')
     end
   end
+
+  context 'command parsing and robustness' do
+    it 'is case-sensitive for commands and directions' do
+      commands = <<~COMMANDS
+        place 0,0,north
+        move
+        right
+        report
+      COMMANDS
+      expect(run_commands(commands)).to eq('')
+    end
+
+    it 'prevents extra whitespace around and within commands' do
+      commands = <<~COMMANDS
+          PLACE  1, 2,  EAST  
+          MOVE
+        REPORT
+      COMMANDS
+      expect(run_commands(commands)).to eq('')
+    end
+
+    it 'ignores unsupported commands' do
+      commands = <<~COMMANDS
+        PLACE 0,0,NORTH
+        JUMP
+        TELEPORT
+        REPORT
+      COMMANDS
+      expect(run_commands(commands)).to eq('0,0,NORTH')
+    end
+
+    it 'ignores malformed PLACE commands' do
+      commands = <<~COMMANDS
+        PLACE 1,1,NORTH
+        PLACE 1,NORTH
+        PLACE A,B,C
+        PLACE 1,1,UPWARDS
+        REPORT
+      COMMANDS
+      expect(run_commands(commands)).to eq('1,1,NORTH')
+    end
+  end
 end
