@@ -6,7 +6,7 @@ require_relative './commands/report'
 require_relative './commands/invalid'
 
 class CommandParser
-  PLACE_PATTERN = /\APLACE\s+(\d+),(\d+),\s*(NORTH|SOUTH|EAST|WEST)\s*\z/i
+  PLACE_PATTERN = /\APLACE\s+(\d+),(\d+),(NORTH|SOUTH|EAST|WEST)\z/
   VALID_COMMANDS = {
     'MOVE' => Commands::Move,
     'LEFT' => Commands::Left,
@@ -14,7 +14,7 @@ class CommandParser
     'REPORT' => Commands::Report
   }.freeze
   def self.parse(input, robot, table, output)
-    command_str = input.strip
+    command_str = input
 
     if command_str.start_with?('PLACE')
       parse_place_command(command_str, robot, table, output)

@@ -17,7 +17,7 @@ class ToyRobotSimulator
   def run(input_source = $stdin)
     input_source.each_line do |line|
       next if line.strip.empty?
-      execute_command(line)
+      execute_command(line.strip)
     end
   end
 
