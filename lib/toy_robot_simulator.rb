@@ -1,7 +1,57 @@
+class Direction
+  DIRECTIONS = ['NORTH', 'EAST', 'SOUTH', 'WEST']
+
+  def initialize(name)
+    @name = name
+  end
+
+  def turn_left
+    idx = DIRECTIONS.index(@name)
+    Direction.new(DIRECTIONS[(idx - 1) % 4])
+  end
+
+  def to_s
+    @name
+  end
+
+  def movement_delta
+    {
+      'NORTH' => [0, 1],
+      'EAST'  => [1, 0],
+      'SOUTH' => [0, -1],
+      'WEST'  => [-1, 0]
+    }[@name]
+  end
+end
+
+class Robot
+  attr_reader :x, :y, :direction
+
+  def place(x, y, direction)
+    @x = x
+    @y = y
+    @direction = Direction.new(direction)
+  end
+
+  def move
+    dx, dy = @direction.movement_delta
+    @x += dx
+    @y += dy
+  end
+
+  def turn_left
+    @direction = @direction.turn_left
+  end
+
+  def report
+    "#{@x},#{@y},#{@direction}"
+  end
+end
+
 class ToyRobotSimulator
   def initialize(output = $stdout)
     @output = output
-    @placed = false
+    @robot = Robot.new
   end
 
   def run(input)
@@ -15,33 +65,13 @@ class ToyRobotSimulator
   def handle_command(command)
     if command.start_with?('PLACE')
       x, y, dir = command.match(/PLACE (\d+),(\d+),(NORTH|SOUTH|EAST|WEST)/).captures
-      @x = x.to_i
-      @y = y.to_i
-      @direction = dir
-      @placed = true
-    elsif !@placed
-      return
+      @robot.place(x.to_i, y.to_i, dir)
     elsif command == 'MOVE'
-      move
+      @robot.move
     elsif command == 'LEFT'
-      turn_left
+      @robot.turn_left
     elsif command == 'REPORT'
-      @output.puts "#{@x},#{@y},#{@direction}"
+      @output.puts @robot.report
     end
-  end
-
-  def move
-    case @direction
-    when 'NORTH' then @y += 1
-    when 'SOUTH' then @y -= 1
-    when 'EAST'  then @x += 1
-    when 'WEST'  then @x -= 1
-    end
-  end
-
-  def turn_left
-    directions = ['NORTH', 'WEST', 'SOUTH', 'EAST']
-    idx = directions.index(@direction)
-    @direction = directions[(idx + 1) % 4]
   end
 end
