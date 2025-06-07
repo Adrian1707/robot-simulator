@@ -57,4 +57,59 @@ RSpec.describe 'Toy Robot Simulator End-to-End Integration' do
       expect(run_commands(commands)).to eq('1,1,SOUTH')
     end
   end
+
+  context 'preventing the robot from falling' do
+    it 'ignores MOVE commands that would make it fall off the north edge' do
+      commands = <<~COMMANDS
+        PLACE 0,4,NORTH
+        MOVE
+        REPORT
+      COMMANDS
+      expect(run_commands(commands)).to eq('0,4,NORTH')
+    end
+
+    it 'ignores MOVE commands that would make it fall off the east edge' do
+      commands = <<~COMMANDS
+        PLACE 4,0,EAST
+        MOVE
+        REPORT
+      COMMANDS
+      expect(run_commands(commands)).to eq('4,0,EAST')
+    end
+
+    it 'ignores MOVE commands that would make it fall off the south edge' do
+      commands = <<~COMMANDS
+        PLACE 2,0,SOUTH
+        MOVE
+        REPORT
+      COMMANDS
+      expect(run_commands(commands)).to eq('2,0,SOUTH')
+    end
+
+    it 'ignores MOVE commands that would make it fall off the west edge' do
+      commands = <<~COMMANDS
+        PLACE 0,3,WEST
+        MOVE
+        REPORT
+      COMMANDS
+      expect(run_commands(commands)).to eq('0,3,WEST')
+    end
+
+    it 'ignores an initial PLACE command that is outside the table' do
+      commands = <<~COMMANDS
+        PLACE 5,5,NORTH
+        REPORT
+      COMMANDS
+      expect(run_commands(commands)).to be_empty
+    end
+
+    it 'ignores a subsequent PLACE command that is outside the table' do
+      commands = <<~COMMANDS
+        PLACE 0,0,NORTH
+        PLACE 10,10,EAST
+        REPORT
+      COMMANDS
+      expect(run_commands(commands)).to eq('0,0,NORTH')
+    end
+  end
 end

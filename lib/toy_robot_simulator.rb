@@ -24,14 +24,26 @@ class Direction
   end
 end
 
+class Table
+  WIDTH = 5
+  HEIGHT = 5
+
+  def valid_position?(x, y)
+    x.between?(0, WIDTH - 1) && y.between?(0, HEIGHT - 1)
+  end
+end
+
+
 class Robot
   attr_reader :x, :y, :direction
 
   def initialize
     @placed = false
+    @table = Table.new
   end
 
   def place(x, y, direction)
+    return unless @table.valid_position?(x, y)
     @x = x
     @y = y
     @direction = Direction.new(direction)
@@ -44,8 +56,12 @@ class Robot
 
   def move
     dx, dy = @direction.movement_delta
-    @x += dx
-    @y += dy
+    new_x = @x + dx
+    new_y = @y + dy
+    return unless @table.valid_position?(new_x, new_y)
+
+    @x = new_x
+    @y = new_y
   end
 
   def turn_left
@@ -56,6 +72,7 @@ class Robot
     "#{@x},#{@y},#{@direction}"
   end
 end
+
 
 class ToyRobotSimulator
   def initialize(output = $stdout)
