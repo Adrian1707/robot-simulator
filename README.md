@@ -30,7 +30,7 @@ This is a Ruby command-line application that simulates a toy robot moving on a 5
 
 The application is structured using an object-oriented approach using the Command and Strategy patterns
 
-[Architectural Diagram](diagram.svg)
+![Architectural Diagram](diagram.svg)
 
 ### Core Components
 
