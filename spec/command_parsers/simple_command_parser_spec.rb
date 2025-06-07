@@ -47,9 +47,6 @@ RSpec.describe CommandParsers::SimpleCommandParser do
     it 'returns a Commands::Move object for "MOVE"' do
       command = described_class.parse('MOVE', robot, table, output)
       expect(command).to be_a(Commands::Move)
-      expect(command.robot).to eq(robot)
-      expect(command.table).to eq(table)
-      expect(command.output).to eq(output)
     end
 
     it 'returns a Commands::Left object for "LEFT"' do

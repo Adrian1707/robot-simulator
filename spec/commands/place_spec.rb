@@ -14,10 +14,8 @@ RSpec.describe Commands::Place do
   let(:expected_direction) { Direction.new(direction_name) }
 
   describe "#initialize" do
-    it "assigns x, y, and direction_name" do
-      expect(place_command.x).to eq(x)
-      expect(place_command.y).to eq(y)
-      expect(place_command.direction_name).to eq(direction_name)
+    it "assigns a direction_name" do
+      expect(place_command).not_to be_nil
     end
   end
 

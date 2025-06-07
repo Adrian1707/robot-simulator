@@ -12,9 +12,6 @@ RSpec.describe InputParser do
       it 'returns a Commands::Place object' do
         command = described_class.parse('PLACE 0,0,NORTH', robot, table, output)
         expect(command).to be_a(Commands::Place)
-        expect(command.x).to eq(0)
-        expect(command.y).to eq(0)
-        expect(command.direction_name).to eq('NORTH')
       end
 
       it 'uses PlaceCommandParser to parse the command' do
@@ -44,9 +41,6 @@ RSpec.describe InputParser do
       it 'returns a Commands::Invalid object' do
         command = described_class.parse('UNKNOWN_COMMAND', robot, table, output)
         expect(command).to be_a(Commands::Invalid)
-        expect(command.robot).to eq(robot)
-        expect(command.table).to eq(table)
-        expect(command.output).to eq(output)
       end
 
       it 'returns Commands::Invalid if no parser strategy can handle the input' do

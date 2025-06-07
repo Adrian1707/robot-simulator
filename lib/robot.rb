@@ -1,5 +1,4 @@
 class Robot
-
   def initialize
     @position = nil
     @direction = nil

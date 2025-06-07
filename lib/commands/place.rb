@@ -4,8 +4,6 @@ require_relative '../direction'
 
 module Commands
   class Place < Base
-    attr_reader :x, :y, :direction_name
-
     def initialize(robot, table, output, x, y, direction_name)
       super(robot, table, output)
       @x = x
@@ -20,5 +18,9 @@ module Commands
         robot.place(position, direction)
       end
     end
+
+    private
+
+    attr_reader :x, :y, :direction_name
   end
 end

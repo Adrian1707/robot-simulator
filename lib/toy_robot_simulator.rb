@@ -16,11 +16,11 @@ class ToyRobotSimulator
     end
   end
 
-  private
-
   def execute_command(input)
     command_from_input(input).execute
   end
+
+  private
 
   def command_from_input(input)
     InputParser.parse(input, robot, table, output)

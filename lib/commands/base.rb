@@ -1,7 +1,5 @@
 module Commands
   class Base
-    attr_reader :robot, :table, :output
-
     def initialize(robot, table, output)
       @robot = robot
       @table = table
@@ -13,6 +11,8 @@ module Commands
     end
 
     private
+
+    attr_reader :robot, :table, :output
 
     def robot_placed?
       robot.placed?

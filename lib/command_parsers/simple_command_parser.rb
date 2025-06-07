@@ -1,8 +1,8 @@
 require_relative './base'
-require 'commands/move'
-require 'commands/left'
-require 'commands/right'
-require 'commands/report'
+require_relative '../commands/move'
+require_relative '../commands/left'
+require_relative '../commands/right'
+require_relative '../commands/report'
 
 module CommandParsers
   class SimpleCommandParser < Base

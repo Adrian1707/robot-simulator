@@ -1,6 +1,6 @@
 require_relative './base'
-require 'commands/place'
-require 'commands/invalid'
+require_relative '../commands/place'
+require_relative '../commands/invalid'
 
 module CommandParsers
   class PlaceCommandParser < Base
