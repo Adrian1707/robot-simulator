@@ -64,7 +64,7 @@ The application is structured using an object-oriented approach using the Comman
 
 ### Command Pattern
 
-The application heavily utilises the [Command Pattern]([https://en.wikipedia.org/wiki/Command_pattern](https://refactoring.guru/design-patterns/command)) to handle different robot actions:
+The application heavily utilises the [Command Pattern](https://refactoring.guru/design-patterns/command) to handle different robot actions:
 
 -   Commands::Base:
     -   An abstract base class for all commands.
@@ -93,7 +93,7 @@ The command parsing system uses a [Strategy Pattern with Chain of Responsibility
 
 ### Installation
 
-This application is written in Ruby. You will need a Ruby environment installed on your system (version 2.7 or higher is recommended). No special gems are required.
+This application is written in Ruby 3.4.4. You will need a Ruby environment installed on your system (version 2.7 or higher is recommended). No special gems are required.
 
 ### Running the Simulator
 
