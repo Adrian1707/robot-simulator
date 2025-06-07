@@ -26,9 +26,11 @@ def display_instructions
   puts "\n🛑  Note: The first command **must** be a valid PLACE command, or all others will be ignored.".upcase
   puts "\n🧭  Table Coordinates: Origin (0,0) is at the **South-West** corner (bottom-left)."
   puts "\n🚪  Leave anytime by pressing Ctrl-d"
-  puts "\n⭐️  If you enjoyed this game, feel free to offer a job to Adrian Booth"
 end
 
+at_exit do
+  puts "\n⭐️  Thanks for playing! If you enjoyed this game, feel free to offer a job to Adrian Booth"
+end
 
 if __FILE__ == $PROGRAM_NAME
   simulator = ToyRobotSimulator.new
