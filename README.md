@@ -14,8 +14,8 @@ This is a Ruby command-line application that simulates a toy robot moving on a 5
 - [Test Data](#test-data)
 - [Design Decisions / Architecture](#design-decisions--architecture)
   - [Core Components](#core-components)
-  - [Command Pattern](#command-pattern)
-  - [Input Processing](#input-processing-using-a-strategy-pattern)
+  - [Command Handling](#command-handling-using-the-command-pattern)
+  - [Input Processing](#input-processing-using-the-strategy-pattern)
   - [Error Handling](#error-handling)
 - [What Could Be Improved](#what-could-be-improved)
 
@@ -41,8 +41,8 @@ If you don't already have Ruby installed, I'd recommend using a version manager 
 
 ```bash
 brew install rbenv
-rbenv install 3.2.2
-rbenv global 3.2.2
+rbenv install 3.4.4
+rbenv global 3.4.4
 ```
 
 **Ubuntu/Debian (via `rbenv`)**
@@ -56,8 +56,8 @@ echo 'export PATH="$HOME/.rbenv/bin:$PATH"' >> ~/.bashrc
 echo 'eval "$(rbenv init - bash)"' >> ~/.bashrc
 exec "$SHELL"
 git clone https://github.com/rbenv/ruby-build.git ~/.rbenv/plugins/ruby-build
-rbenv install 3.2.2
-rbenv global 3.2.2
+rbenv install 3.4.4
+rbenv global 3.4.4
 ```
 
 #### 2. **Install Bundler**
@@ -97,7 +97,7 @@ The simulator can accept commands from standard input (interactive mode) or from
 Run the script directly and type commands into your terminal. Press `Ctrl+D` (Unix/Linux/macOS) or `Ctrl+Z` then `Enter` (Windows) to signal end-of-input and exit.
 
 ```bash
-ruby robot.rb
+ruby toy_robot_runner.rb
 ```
 
 **Example Interactive Session:**
@@ -149,7 +149,7 @@ REPORT
 Then, run the simulator, passing the filename as the argument:
 
 ```bash
-ruby robot.rb commands.txt
+ruby toy_robot_runner.rb commands.txt
 ```
 
 **Expected Output for `commands.txt`:**
@@ -233,7 +233,7 @@ All commands are case-sensitive for directions (e.g., `NORtH`, `north`, `North` 
 These test cases are included in commands.txt and their actual output can be verified by running
 
 ```bash
-ruby robot.rb commands.txt
+ruby toy_robot_runner.rb commands.txt
 ```
 **Test Case 1:**
 
@@ -404,27 +404,48 @@ The application is structured using an object-oriented approach using the Comman
     -   The `execute_command` method takes a raw input string, delegates parsing to `InputParser`, and then executes the resulting command.
     -   The `run` method iterates over lines from an input source (defaulting to `$stdin`), allowing for both interactive and file-based input.
 
-### Command Pattern
+### Command handling using the Command Pattern
 
-The application heavily utilises the [Command Pattern](https://refactoring.guru/design-patterns/command) to handle different robot actions:
+The application utilises the [Command Pattern](https://refactoring.guru/design-patterns/command) to handle different robot actions:
 
--   Commands::Base:
+- Commands::Base:
+
     -   An abstract base class for all commands.
     -   Holds references to the `robot`, `table`, and `output` stream.
     -   Defines the `execute` interface that all concrete commands must implement.
     -   Includes a `robot_placed?` helper to ensure commands are only executed if the robot is on the table.
 
 -   Concrete Command Classes:
+
     -   Each class encapsulates a specific action.
     -   The `execute` method for each command contains the logic for that particular action.
     -   This design separates the action from the object that invokes the action (the simulator), making it easy to add new commands or modify existing ones without altering the core simulation logic.
     -   `Commands::Invalid` is a special command that does nothing, effectively ignoring unrecognised or invalid commands as per the requirements. This opens us up for better error handling / logging in the future
 
-### Input Processing using a Strategy Pattern
+### Input processing using the Strategy Pattern
 
-The command parsing system uses a [Strategy Pattern with Chain of Responsibility](https://refactoring.guru/design-patterns/strategy) to handle different types of user input. The `InputParser` tries each parser strategy in sequence until one can handle the input, falling back to an Invalid command if none match.
+The application uses the [Strategy Pattern](https://refactoring.guru/design-patterns/strategy) to parse different types of input commands into executable command objects:
 
-**Two-Parser Split Rationale**: The PLACE command is fundamentally different from other commands. It requires complex parameter parsing (coordinates and direction) with regex validation, while MOVE/LEFT/RIGHT/REPORT are simple, parameterless commands requiring only exact string matching. This separation keeps the simple command parser lightweight and gives PLACE the sophisticated parsing logic it needs, following the single responsibility principle and making the code more maintainable.
+- CommandParsers::Base:
+
+    - An abstract base class defining the can_parse? and parse class methods.
+    - Uses class methods since parsing is stateless and doesn't require object instantiation.
+    - Establishes a consistent interface for different parsing strategies.
+
+- Concrete Parser Classes:
+
+    - Each class encapsulates parsing logic for a specific command type.
+    - The can_parse? method determines if the parser can handle the input.
+    - The parse method returns a hash with the command class and arguments.
+    - CommandParsers::PlaceCommandParser handles PLACE commands with regex pattern matching.
+    - CommandParsers::SimpleCommandParser handles basic commands using a lookup table.
+
+- InputParser Integration:
+
+    - Maintains an ordered list of parser strategies and tries each until finding a match.
+    - Defaults to Invalid command if no parser matches and gracefully ignores unrecognised input.
+
+**Two-Parser Split Rationale**: The PLACE command is fundamentally different from other commands. It requires complex parameter parsing (coordinates and direction) with regex validation, while MOVE/LEFT/RIGHT/REPORT are simple, parameterless commands requiring only exact string matching. This separation keeps the simple command parser lightweight and gives PLACE the sophisticated parsing logic it needs.
 
 ### Error Handling
 
@@ -434,16 +455,6 @@ The command parsing system uses a [Strategy Pattern with Chain of Responsibility
 ## What Could Be Improved
 
 Given more time, I would consider the following enhancements:
-### Error handling
-Users don't know if what they've written is valid until they've run the REPORT command
-
-### Logging
-
-Very little visibility into what users are doing, what kinds of mistakes they're making, how much they're struggling. 
-
-### Naming
-
-I would change LEFT and RIGHT to "TURN_LEFT" "TURN_RIGHT". It's not so clear that LEFT and RIGHT relate to turning but not moving and it might end up confusing people. It's a trade off between a better documenting API but with more verbose commands. 
 
 ### User interface
 
@@ -459,6 +470,17 @@ The requirements didn't say anything about allowing case insensitivity so i was 
 #### Stronger typing
 Sorbet could be handy here, i've gotten a bit used to types at Indeed Flex and being able to see what kind of attributes we're dealing with "x" and "y" would be useful
 
+#### Error handling
+Users don't know if what they've written is valid until they've run the REPORT command
+
+#### Logging
+
+Very little visibility into what users are doing, what kinds of mistakes they're making, how much they're struggling. 
+
+#### Naming
+
+I would change LEFT and RIGHT to "TURN_LEFT" "TURN_RIGHT". It's not so clear that LEFT and RIGHT relate to turning but not moving and it might end up confusing people. It's a trade off between a better documenting API but with more verbose commands. 
+
 #### Diverging behaviour between a placed robot and non-placed robot
 
 We might want to think about having two different types of robot here if the behaviour increasingly diverges e.g [State pattern](https://refactoring.guru/design-patterns/state). We need to keep checking if the robot is placed before executing methods. 
@@ -466,5 +488,5 @@ We might want to think about having two different types of robot here if the beh
 
 ### Commit History
 
-I intentionally left the commits messy and did not perform any rebases so the evolution of my work could be viewed.
+I intentionally left the commits messy and did not perform any rebases during development so the evolution of my work could be viewed. Only a few commits towards the end were squashed / rebased as they were very minor README changes.
 In any other project I would prefer to have a tidy history of git commits. 

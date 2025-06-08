@@ -37,8 +37,11 @@ if __FILE__ == $PROGRAM_NAME
   if ARGV.empty?
     # Interactive mode: read commands from standard input with prompt
     puts display_instructions
-   
+
     loop do
+      print "> "
+      $stdout.flush
+
       line = $stdin.gets
       break if line.nil?
       line.strip!
