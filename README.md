@@ -372,7 +372,7 @@ REPORT
 
 The application is structured using an object-oriented approach using the Command and Strategy patterns
 
-![Architectural Diagram](diagram.svg)
+![Architectural Diagram](system_diagram.svg)
 
 ### Core Components
 
