@@ -230,7 +230,6 @@ All commands are case-sensitive for directions (e.g., `NORtH`, `north`, `North` 
 
 ## Test Data
 
-The problem description provides the following example test cases.
 These test cases are included in commands.txt and their actual output can be verified by running
 
 ```bash
@@ -269,7 +268,7 @@ REPORT
 
 **Expected Output:** `3,3,NORTH`
 
-**Additional Test Cases (to cover edge cases and error handling):**
+**Additional Test Cases (to cover edge cases):**
 
 **Test Case 4 (Initial invalid commands):**
 
