@@ -4,6 +4,9 @@ require_relative '../commands/invalid'
 
 module CommandParsers
   class PlaceCommandParser < Base
+    # WARNING: This Regex will currently only work for tables up to 9x9
+    # This is currently structured to prevent commands like PLACE 1,00,NORTH
+    # Look into adapting or changing this for larger tables
     PLACE_PATTERN = /\APLACE\s+(\d{1}),(\d{1}),(NORTH|SOUTH|EAST|WEST)\z/
 
     def self.can_parse?(input)
