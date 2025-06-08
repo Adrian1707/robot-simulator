@@ -8,15 +8,16 @@ class InputParser
     CommandParsers::SimpleCommandParser
   ].freeze
 
-  def self.parse(input, robot, table, output)
+  def self.parse(input)
     command_str = input
 
     PARSER_STRATEGIES.each do |parser_strategy|
       if parser_strategy.can_parse?(command_str)
-        return parser_strategy.parse(command_str, robot, table, output)
+        parsed_command = parser_strategy.parse(command_str)
+        return parsed_command
       end
     end
 
-    Commands::Invalid.new(robot, table, output)
+    { command_class: Commands::Invalid, command_args: [] }
   end
 end

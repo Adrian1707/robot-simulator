@@ -5,10 +5,6 @@ require 'commands/right'
 require 'commands/report'
 
 RSpec.describe CommandParsers::SimpleCommandParser do
-  let(:robot) { instance_double('Robot') }
-  let(:table) { instance_double('Table') }
-  let(:output) { instance_double('Output') }
-
   describe '.can_parse?' do
     context 'when input is a known simple command' do
       it 'returns true for MOVE' do
@@ -45,27 +41,23 @@ RSpec.describe CommandParsers::SimpleCommandParser do
 
   describe '.parse' do
     it 'returns a Commands::Move object for "MOVE"' do
-      command = described_class.parse('MOVE', robot, table, output)
-      expect(command).to be_a(Commands::Move)
+      command = described_class.parse('MOVE')
+      expect(command[:command_class]).to eq(Commands::Move)
     end
 
     it 'returns a Commands::Left object for "LEFT"' do
-      command = described_class.parse('LEFT', robot, table, output)
-      expect(command).to be_a(Commands::Left)
+      command = described_class.parse('LEFT')
+      expect(command[:command_class]).to eq(Commands::Left)
     end
 
     it 'returns a Commands::Right object for "RIGHT"' do
-      command = described_class.parse('RIGHT', robot, table, output)
-      expect(command).to be_a(Commands::Right)
+      command = described_class.parse('RIGHT')
+      expect(command[:command_class]).to eq(Commands::Right)
     end
 
     it 'returns a Commands::Report object for "REPORT"' do
-      command = described_class.parse('REPORT', robot, table, output)
-      expect(command).to be_a(Commands::Report)
-    end
-
-    it 'does not implicitly handle invalid commands (it expects can_parse? to filter first)' do
-      expect { described_class.parse('INVALID_COMMAND', robot, table, output) }.to raise_error(NoMethodError)
+      command = described_class.parse('REPORT')
+      expect(command[:command_class]).to eq(Commands::Report)
     end
   end
 end

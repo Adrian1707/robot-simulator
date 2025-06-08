@@ -2,10 +2,6 @@ require 'command_parsers/place_command_parser'
 require 'commands/invalid'
 
 RSpec.describe CommandParsers::PlaceCommandParser do
-  let(:robot) { instance_double('Robot') }
-  let(:table) { instance_double('Table') }
-  let(:output) { instance_double('Output') }
-
   describe '.can_parse?' do
     context 'when input starts with PLACE' do
       it 'returns true for a valid PLACE command' do
@@ -35,47 +31,53 @@ RSpec.describe CommandParsers::PlaceCommandParser do
   describe '.parse' do
     context 'with a valid PLACE command' do
       it 'returns a Commands::Place object with correct attributes for NORTH' do
-        command = described_class.parse('PLACE 1,2,NORTH', robot, table, output)
-        expect(command).to be_a(Commands::Place)
-        expect(command.x).to eq(1)
-        expect(command.y).to eq(2)
-        expect(command.direction).to eq('NORTH')
-        expect(command.robot).to eq(robot)
-        expect(command.table).to eq(table)
-        expect(command.output).to eq(output)
+        command = described_class.parse('PLACE 1,2,NORTH')
+        expect(command[:command_class]).to eq(Commands::Place)
+        expect(command[:command_args]).to eq([1, 2, "NORTH"])
       end
 
       it 'returns a Commands::Place object with correct attributes for WEST' do
-        command = described_class.parse('PLACE 4,0,WEST', robot, table, output)
-        expect(command).to be_a(Commands::Place)
-        expect(command.x).to eq(4)
-        expect(command.y).to eq(0)
-        expect(command.direction).to eq('WEST')
+        command = described_class.parse('PLACE 4,0,WEST')
+        expect(command[:command_class]).to eq(Commands::Place)
+        expect(command[:command_args]).to eq([4, 0, "WEST"])
       end
     end
 
     context 'with an invalid PLACE command format' do
       it 'returns a Commands::Invalid object for missing coordinates' do
-        command = described_class.parse('PLACE NORTH', robot, table, output)
-        expect(command).to be_a(Commands::Invalid)
-        expect(command.robot).to eq(robot)
-        expect(command.table).to eq(table)
-        expect(command.output).to eq(output)
+        command = described_class.parse('PLACE NORTH')
+        expect(command[:command_class]).to eq(Commands::Invalid)
+        expect(command[:command_args]).to eq([])
+      end
+
+      it 'returns a Commands::Invalid object when extra zeros in coordinates' do
+        command = described_class.parse('PLACE 1,00,NORTH')
+        expect(command[:command_class]).to eq(Commands::Invalid)
+        expect(command[:command_args]).to eq([])
       end
 
       it 'returns a Commands::Invalid object for invalid direction' do
-        command = described_class.parse('PLACE 1,2,UP', robot, table, output)
-        expect(command).to be_a(Commands::Invalid)
+        command = described_class.parse('PLACE 1,2,UP')
+        expect(command[:command_class]).to eq(Commands::Invalid)
+        expect(command[:command_args]).to eq([])
       end
 
       it 'returns a Commands::Invalid object for extra characters' do
-        command = described_class.parse('PLACE 1,2,NORTH EXTRA', robot, table, output)
-        expect(command).to be_a(Commands::Invalid)
+        command = described_class.parse('PLACE 1,2,NORTH EXTRA')
+        expect(command[:command_class]).to eq(Commands::Invalid)
+        expect(command[:command_args]).to eq([])
       end
 
       it 'returns a Commands::Invalid object for malformed input' do
-        command = described_class.parse('PLACEX 1,2,NORTH', robot, table, output)
-        expect(command).to be_a(Commands::Invalid)
+        command = described_class.parse('PLACEX 1,2,NORTH')
+        expect(command[:command_class]).to eq(Commands::Invalid)
+        expect(command[:command_args]).to eq([])
+      end
+
+      it 'returns a Commands::Invalid object for valid command with comma at the end' do
+        command = described_class.parse('PLACE 1,2,NORTH,')
+        expect(command[:command_class]).to eq(Commands::Invalid)
+        expect(command[:command_args]).to eq([])
       end
     end
   end

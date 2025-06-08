@@ -23,7 +23,11 @@ class ToyRobotSimulator
   private
 
   def command_from_input(input)
-    InputParser.parse(input, robot, table, output)
+    parsed_command = InputParser.parse(input)
+    command_class = parsed_command[:command_class]
+    command_args = parsed_command[:command_args]
+
+    command_class.new(robot, table, output, *command_args)
   end
 
   attr_reader :table, :robot, :output

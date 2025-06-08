@@ -13,7 +13,7 @@ RSpec.describe CommandParsers::Base do
 
   describe '.parse' do
     it 'raises NotImplementedError' do
-      expect { described_class.parse('ANY_INPUT', robot, table, output) }.to raise_error(NotImplementedError)
+      expect { described_class.parse('ANY_INPUT') }.to raise_error(NotImplementedError)
     end
   end
 end

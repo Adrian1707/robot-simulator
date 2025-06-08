@@ -462,3 +462,9 @@ Sorbet could be handy here, i've gotten a bit used to types at Indeed Flex and b
 #### Diverging behaviour between a placed robot and non-placed robot
 
 We might want to think about having two different types of robot here if the behaviour increasingly diverges e.g [State pattern](https://refactoring.guru/design-patterns/state). We need to keep checking if the robot is placed before executing methods. 
+
+
+### Commit History
+
+I intentionally left the commits messy and did not perform any rebases so the evolution of my work could be viewed.
+In any other project I would prefer to have a tidy history of git commits. 

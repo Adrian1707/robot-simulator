@@ -4,7 +4,7 @@ module CommandParsers
       raise NotImplementedError
     end
 
-    def self.parse(input, robot, table, output)
+    def self.parse(input)
       raise NotImplementedError
     end
   end

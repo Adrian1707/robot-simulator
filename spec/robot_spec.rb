@@ -1,5 +1,4 @@
 require 'position'
-require 'direction'
 require 'robot'
 
 RSpec.describe Robot do

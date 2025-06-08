@@ -17,8 +17,11 @@ module CommandParsers
       COMMAND_MAP.key?(input)
     end
 
-    def self.parse(input, robot, table, output)
-      COMMAND_MAP[input].new(robot, table, output)
+    def self.parse(input)
+      {
+        command_class: COMMAND_MAP[input],
+        command_args: []
+      }
     end
   end
 end
