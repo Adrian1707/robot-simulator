@@ -1,6 +1,4 @@
 require 'input_parser'
-require 'command_parsers/place_command_parser'
-require 'command_parsers/simple_command_parser'
 
 RSpec.describe InputParser do
   describe '.parse' do

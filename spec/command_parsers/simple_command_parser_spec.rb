@@ -1,8 +1,4 @@
 require 'command_parsers/simple_command_parser'
-require 'commands/move'
-require 'commands/left'
-require 'commands/right'
-require 'commands/report'
 
 RSpec.describe CommandParsers::SimpleCommandParser do
   describe '.can_parse?' do

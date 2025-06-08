@@ -1,5 +1,4 @@
 require 'command_parsers/place_command_parser'
-require 'commands/invalid'
 
 RSpec.describe CommandParsers::PlaceCommandParser do
   describe '.can_parse?' do

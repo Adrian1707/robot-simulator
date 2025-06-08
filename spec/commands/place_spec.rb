@@ -1,6 +1,4 @@
 require 'commands/place'
-require 'position'
-require 'direction'
 
 RSpec.describe Commands::Place do
   let(:robot) { instance_double("Robot") }

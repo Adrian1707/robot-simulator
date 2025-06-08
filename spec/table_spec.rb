@@ -1,5 +1,4 @@
-require 'table'   
-require 'position'
+require 'table'
 
 RSpec.describe Table do
   describe '#initialize' do
