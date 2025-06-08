@@ -97,7 +97,7 @@ The simulator can accept commands from standard input (interactive mode) or from
 Run the script directly and type commands into your terminal. Press `Ctrl+D` (Unix/Linux/macOS) or `Ctrl+Z` then `Enter` (Windows) to signal end-of-input and exit.
 
 ```bash
-ruby run.rb
+ruby robot.rb
 ```
 
 **Example Interactive Session:**
@@ -146,10 +146,10 @@ PLACE 5,5,NORTH # This place is invalid
 REPORT
 ```
 
-Then, run the simulator, redirecting the file content as input:
+Then, run the simulator, passing the filename as the argument:
 
 ```bash
-ruby run.rb < commands.txt
+ruby robot.rb commands.txt
 ```
 
 **Expected Output for `commands.txt`:**
@@ -234,7 +234,7 @@ The problem description provides the following example test cases.
 These test cases are included in commands.txt and their actual output can be verified by running
 
 ```bash
-ruby run.rb < commands.txt
+ruby robot.rb commands.txt
 ```
 **Test Case 1:**
 

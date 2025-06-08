@@ -34,7 +34,6 @@ end
 
 if __FILE__ == $PROGRAM_NAME
   simulator = ToyRobotSimulator.new
-
   if ARGV.empty?
     # Interactive mode: read commands from standard input with prompt
     puts display_instructions
