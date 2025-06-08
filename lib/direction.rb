@@ -7,6 +7,7 @@ class Direction
   }.freeze
 
   DIRECTION_NAMES = COORDINATE_DELTAS.keys.freeze
+  ROTATION_STEPS = { left: -1, right: 1 }.freeze
 
   attr_reader :name
 
@@ -15,10 +16,7 @@ class Direction
   end
 
   def turn(direction)
-    current_index = DIRECTION_NAMES.index(@name)
-    offset = direction == :left ? -1 : 1
-    new_direction = DIRECTION_NAMES[(current_index + offset) % DIRECTION_NAMES.length]
-    Direction.new(new_direction)
+    Direction.new(rotated_direction_name(direction))
   end
 
   def coordinate_delta
@@ -27,5 +25,18 @@ class Direction
 
   def to_s
     @name
+  end
+
+  private
+
+  def rotated_direction_name(rotation)
+    steps = ROTATION_STEPS.fetch(rotation) 
+    new_index = (current_direction_index + steps) % DIRECTION_NAMES.length
+
+    DIRECTION_NAMES[new_index]
+  end
+
+  def current_direction_index
+    DIRECTION_NAMES.index(@name)
   end
 end
