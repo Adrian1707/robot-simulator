@@ -13,6 +13,10 @@ RSpec.describe Direction do
       east = direction('EAST')
       expect(east.name).to eq('EAST')
     end
+
+    it 'raises an error for invalid direction names' do
+      expect { Direction.new('INVALID') }.to raise_error(ArgumentError)
+    end
   end
 
   describe '#turn' do
@@ -71,6 +75,13 @@ RSpec.describe Direction do
         new_direction = north.turn(:left)
         expect(new_direction).not_to be(north)
         expect(new_direction).to be_a(Direction)
+      end
+    end
+
+    context 'with an invalid turn' do
+      it 'raises an error for invalid turn directions' do
+        north = direction('NORTH')
+        expect { north.turn(:invalid) }.to raise_error(KeyError)
       end
     end
   end

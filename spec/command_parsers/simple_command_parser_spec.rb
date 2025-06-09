@@ -33,27 +33,63 @@ RSpec.describe CommandParsers::SimpleCommandParser do
         expect(described_class.can_parse?('MOV')).to be false
       end
     end
+
+    context 'when input is a valid command but formatted incorrectly' do
+      it 'returns false when trailing comma' do
+        expect(described_class.can_parse?('MOVE,')).to be false
+      end
+
+      it 'returns false when followed by another command' do
+        expect(described_class.can_parse?('LEFT MOVE')).to be false
+      end
+
+      it 'returns false when part lower case' do
+        expect(described_class.can_parse?('RiGHT')).to be false
+      end
+    end
   end
 
   describe '.parse' do
-    it 'returns a Commands::Move object for "MOVE"' do
-      command = described_class.parse('MOVE')
-      expect(command[:command_class]).to eq(Commands::Move)
+    context 'for valid commands' do
+      it 'returns a Commands::Move object for "MOVE"' do
+        command = described_class.parse('MOVE')
+        expect(command[:command_class]).to eq(Commands::Move)
+      end
+
+      it 'returns a Commands::Left object for "LEFT"' do
+        command = described_class.parse('LEFT')
+        expect(command[:command_class]).to eq(Commands::Left)
+      end
+
+      it 'returns a Commands::Right object for "RIGHT"' do
+        command = described_class.parse('RIGHT')
+        expect(command[:command_class]).to eq(Commands::Right)
+      end
+
+      it 'returns a Commands::Report object for "REPORT"' do
+        command = described_class.parse('REPORT')
+        expect(command[:command_class]).to eq(Commands::Report)
+      end
     end
 
-    it 'returns a Commands::Left object for "LEFT"' do
-      command = described_class.parse('LEFT')
-      expect(command[:command_class]).to eq(Commands::Left)
-    end
+    context 'for invalid commands' do
+      it 'returns a Commands::Invalid object with trailing comma' do
+        command = described_class.parse('MOVE,')
+        expect(command[:command_class]).to eq(Commands::Invalid)
+        expect(command[:command_args]).to eq([])
+      end
 
-    it 'returns a Commands::Right object for "RIGHT"' do
-      command = described_class.parse('RIGHT')
-      expect(command[:command_class]).to eq(Commands::Right)
-    end
+      it 'returns a Commands::Invalid object with two commands' do
+        command = described_class.parse('MOVE LEFT')
+        expect(command[:command_class]).to eq(Commands::Invalid)
+        expect(command[:command_args]).to eq([])
+      end
 
-    it 'returns a Commands::Report object for "REPORT"' do
-      command = described_class.parse('REPORT')
-      expect(command[:command_class]).to eq(Commands::Report)
+      it 'returns a Commands::Invalid object with two commands' do
+        command = described_class.parse('REPORT RIGHT')
+        expect(command[:command_class]).to eq(Commands::Invalid)
+        expect(command[:command_args]).to eq([])
+      end
     end
   end
 end

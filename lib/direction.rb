@@ -12,6 +12,10 @@ class Direction
   attr_reader :name
 
   def initialize(name)
+    unless COORDINATE_DELTAS.key?(name)
+      raise ArgumentError, "Invalid direction: #{name}"
+    end
+
     @name = name
   end
 

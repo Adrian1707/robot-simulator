@@ -6,6 +6,7 @@ RSpec.describe InputParser do
       it 'returns a Commands::Place object' do
         command = described_class.parse('PLACE 0,0,NORTH')
         expect(command[:command_class]).to eq(Commands::Place)
+        expect(command[:command_args]).to eq([0, 0, "NORTH"])
       end
 
       it 'uses PlaceCommandParser to parse the command' do
@@ -41,7 +42,22 @@ RSpec.describe InputParser do
         allow(CommandParsers::PlaceCommandParser).to receive(:can_parse?).and_return(false)
         allow(CommandParsers::SimpleCommandParser).to receive(:can_parse?).and_return(false)
 
-        command = described_class.parse('GARBAGE')
+        command = described_class.parse('FOOBAR')
+        expect(command[:command_class]).to eq(Commands::Invalid)
+      end
+
+      it 'handles nil input gracefully' do
+        command = described_class.parse(nil)
+        expect(command[:command_class]).to eq(Commands::Invalid)
+      end
+    
+      it 'handles empty string input' do
+        command = described_class.parse('')
+        expect(command[:command_class]).to eq(Commands::Invalid)
+      end
+    
+      it 'handles whitespace-only input' do
+        command = described_class.parse('   ')
         expect(command[:command_class]).to eq(Commands::Invalid)
       end
     end

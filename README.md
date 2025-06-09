@@ -31,7 +31,7 @@ This is a Ruby command-line application that simulates a toy robot moving on a 5
 
 ### Installation
 
-This application is written in Ruby 3.4.4. You will need a Ruby environment installed on your system (version 2.7 or higher is recommended). No special gems are required.
+This application is written in Ruby 3.4.4. You will need a Ruby environment installed on your system (version 3 or higher is recommended). No special gems are required.
 
 #### 1. **Install Ruby**
 
@@ -372,7 +372,7 @@ REPORT
 
 The application is structured using an object-oriented approach using the Command and Strategy patterns
 
-![Architectural Diagram](system_diagram.svg)
+![Architectural Diagram](robot_app_diagram.svg)
 
 ### Core Components
 

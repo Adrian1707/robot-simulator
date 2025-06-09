@@ -52,6 +52,18 @@ RSpec.describe Robot do
       expect(robot.report).to eq("#{new_position},#{east_direction}")
       expect(robot.placed?).to be true
     end
+
+    context 'when sending invalid input' do
+      it 'handles nil position in place' do
+        robot.place(nil, north_direction)
+        expect(robot.placed?).to be false
+      end
+    
+      it 'handles nil direction in place' do
+        robot.place(Position.new(0, 0), nil)
+        expect(robot.placed?).to be false
+      end
+    end
   end
 
   describe '#move' do
@@ -75,8 +87,9 @@ RSpec.describe Robot do
     end
 
     context 'when robot is not placed' do
-      it 'does not change position' do
+      it 'does not change position or set robot to placed' do
         robot.move(new_position)
+        expect(robot.placed?).to eq(false)
         expect(robot.report).to eq(nil)
       end
     end

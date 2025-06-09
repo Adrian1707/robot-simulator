@@ -6,13 +6,13 @@ RSpec.describe Commands::Place do
   let(:output) { instance_double("Output") }
   let(:x) { 0 }
   let(:y) { 0 }
-  let(:direction_name) { :north }
+  let(:direction_name) { 'NORTH' }
   let(:place_command) { Commands::Place.new(robot, table, output, x, y, direction_name) }
   let(:expected_position) { Position.new(x, y) }
   let(:expected_direction) { Direction.new(direction_name) }
 
   describe "#initialize" do
-    it "assigns a direction_name" do
+    it "creates a new place command" do
       expect(place_command).not_to be_nil
     end
   end

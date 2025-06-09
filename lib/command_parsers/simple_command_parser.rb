@@ -18,6 +18,10 @@ module CommandParsers
     end
 
     def self.parse(input)
+      # This isn't really needed given the check above, but I want the parse method to always return
+      # consistent types and for the command_class to never be nil 
+      return { command_class: Commands::Invalid, command_args: [] }  unless COMMAND_MAP[input]
+
       {
         command_class: COMMAND_MAP[input],
         command_args: []

@@ -13,6 +13,10 @@ RSpec.describe CommandParsers::PlaceCommandParser do
     end
 
     context 'when input does not start with PLACE' do
+      it 'returns false for place lower case' do
+        expect(described_class.can_parse?('place')).to be false
+      end
+
       it 'returns false for MOVE' do
         expect(described_class.can_parse?('MOVE')).to be false
       end
@@ -39,6 +43,18 @@ RSpec.describe CommandParsers::PlaceCommandParser do
         command = described_class.parse('PLACE 4,0,WEST')
         expect(command[:command_class]).to eq(Commands::Place)
         expect(command[:command_args]).to eq([4, 0, "WEST"])
+      end
+
+      it 'returns a Commands::Place object with correct attributes for EAST' do
+        command = described_class.parse('PLACE 8,7,EAST')
+        expect(command[:command_class]).to eq(Commands::Place)
+        expect(command[:command_args]).to eq([8, 7, "EAST"])
+      end
+
+      it 'returns a Commands::Place object with correct attributes for EAST' do
+        command = described_class.parse('PLACE 9,9,EAST')
+        expect(command[:command_class]).to eq(Commands::Place)
+        expect(command[:command_args]).to eq([9, 9, "EAST"])
       end
     end
 
@@ -75,6 +91,12 @@ RSpec.describe CommandParsers::PlaceCommandParser do
 
       it 'returns a Commands::Invalid object for valid command with comma at the end' do
         command = described_class.parse('PLACE 1,2,NORTH,')
+        expect(command[:command_class]).to eq(Commands::Invalid)
+        expect(command[:command_args]).to eq([])
+      end
+
+      it 'returns a Commands::Invalid object for valid command with comma at the end' do
+        command = described_class.parse('PLACE 1,2,NORTH,MOVE')
         expect(command[:command_class]).to eq(Commands::Invalid)
         expect(command[:command_args]).to eq([])
       end

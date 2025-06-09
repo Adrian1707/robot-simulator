@@ -9,6 +9,9 @@ class InputParser
   ].freeze
 
   def self.parse(input)
+    invalid_command = { command_class: Commands::Invalid, command_args: [] }
+    return invalid_command if input.nil? || input.strip.empty?
+
     command_str = input
 
     PARSER_STRATEGIES.each do |parser_strategy|
@@ -18,6 +21,6 @@ class InputParser
       end
     end
 
-    { command_class: Commands::Invalid, command_args: [] }
+    invalid_command
   end
 end
