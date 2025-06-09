@@ -372,7 +372,7 @@ REPORT
 
 The application is structured using an object-oriented approach using the Command and Strategy patterns
 
-![Architectural Diagram](robot_app_diagram.svg)
+![Architectural Diagram](robot_system_diagram.svg)
 
 ### Core Components
 
